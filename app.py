@@ -1,6 +1,8 @@
+import io
 import os
 import streamlit as st
-from openai import OpenAI
+from fpdf import FPDF
+from groq import Groq
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -157,6 +159,16 @@ div[data-testid="stHorizontalBlock"] { gap: 0.6rem; }
 
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
+def gerar_pdf(texto: str) -> bytes:
+    pdf = FPDF()
+    pdf.add_page()
+    pdf.set_font("Helvetica", size=11)
+    pdf.set_auto_page_break(auto=True, margin=15)
+    for linha in texto.split("\n"):
+        pdf.multi_cell(0, 7, txt=linha)
+    return bytes(pdf.output())
+
+
 def calcular_progresso(tema: str, descricao: str) -> int:
     preenchidos = sum([bool(tema.strip()), bool(descricao.strip())])
     return int((preenchidos / 2) * 100)
@@ -206,18 +218,24 @@ Seja criativo, direto e adequado à plataforma especificada.
 
 
 def gerar_roteiro(prompt: str) -> str:
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-        st.error("Chave de API não encontrada. Configure a variável OPENAI_API_KEY no arquivo .env")
+        st.error("Chave de API não encontrada. Configure a variável GROQ_API_KEY no arquivo .env")
         return ""
-    client = OpenAI(api_key=api_key)
-    response = client.chat.completions.create(
-        model="gpt-4o",
-        messages=[{"role": "user", "content": prompt}],
-        temperature=0.85,
-        max_tokens=2000,
-    )
-    return response.choices[0].message.content
+    client = Groq(api_key=api_key)
+    for model in ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]:
+        try:
+            response = client.chat.completions.create(
+                model=model,
+                messages=[{"role": "user", "content": prompt}],
+                temperature=0.85,
+                max_tokens=2000,
+            )
+            return response.choices[0].message.content
+        except Exception:
+            continue
+    st.error("Não foi possível gerar o roteiro. Verifique sua chave Groq e tente novamente.")
+    return ""
 
 
 # ── Estado da sessão ──────────────────────────────────────────────────────────
@@ -338,10 +356,9 @@ with col_resultado:
         )
 
         st.markdown("")
-        c_copy, c_dl, c_novo = st.columns(3)
+        c_copy, c_pdf, c_novo = st.columns(3)
 
         with c_copy:
-            # Botão copiar via JavaScript
             roteiro_js = st.session_state.roteiro.replace("`", "\\`").replace("\n", "\\n")
             copy_js = f"""
             <button onclick="navigator.clipboard.writeText(`{roteiro_js}`).then(()=>this.innerText='✓ Copiado!')"
@@ -352,12 +369,12 @@ with col_resultado:
             """
             st.markdown(copy_js, unsafe_allow_html=True)
 
-        with c_dl:
+        with c_pdf:
             st.download_button(
-                label="⬇️ Baixar .txt",
-                data=st.session_state.roteiro,
-                file_name="roteiro_easyscript.txt",
-                mime="text/plain",
+                label="⬇️ Baixar PDF",
+                data=gerar_pdf(st.session_state.roteiro),
+                file_name="roteiro_easyscript.pdf",
+                mime="application/pdf",
                 use_container_width=True,
             )
 
