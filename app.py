@@ -19,10 +19,10 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
 
 html, body, [class*="css"] {
-    font-family: 'Inter', sans-serif;
+    font-family: 'Libre Baskerville', serif;
     background-color: #FFFEDC;
     color: #333;
 }
@@ -363,7 +363,7 @@ with col_resultado:
             copy_js = f"""
             <button onclick="navigator.clipboard.writeText(`{roteiro_js}`).then(()=>this.innerText='✓ Copiado!')"
                 style="width:100%;padding:0.45rem;background:#EF819E;color:#FFFFFF;border:1px solid #E1587D;
-                       border-radius:8px;cursor:pointer;font-family:Inter,sans-serif;font-size:0.85rem;">
+                       border-radius:8px;cursor:pointer;font-family:'Libre Baskerville',serif;font-size:0.85rem;">
                 📋 Copiar
             </button>
             """
