@@ -1,7 +1,10 @@
 import io
 import os
 import streamlit as st
-from fpdf import FPDF
+from reportlab.lib.pagesizes import A4
+from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.units import mm
+from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer
 from groq import Groq
 from dotenv import load_dotenv
 
@@ -160,13 +163,17 @@ div[data-testid="stHorizontalBlock"] { gap: 0.6rem; }
 # ── Helpers ───────────────────────────────────────────────────────────────────
 
 def gerar_pdf(texto: str) -> bytes:
-    pdf = FPDF()
-    pdf.add_page()
-    pdf.set_font("Helvetica", size=11)
-    pdf.set_auto_page_break(auto=True, margin=15)
+    buf = io.BytesIO()
+    doc = SimpleDocTemplate(buf, pagesize=A4, leftMargin=20*mm, rightMargin=20*mm,
+                            topMargin=20*mm, bottomMargin=20*mm)
+    styles = getSampleStyleSheet()
+    style = ParagraphStyle("roteiro", parent=styles["Normal"], fontSize=11,
+                           leading=16, spaceAfter=4)
+    story = []
     for linha in texto.split("\n"):
-        pdf.multi_cell(0, 7, txt=linha)
-    return bytes(pdf.output())
+        story.append(Paragraph(linha.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") or " ", style))
+    doc.build(story)
+    return buf.getvalue()
 
 
 def calcular_progresso(tema: str, descricao: str) -> int:
