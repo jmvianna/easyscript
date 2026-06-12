@@ -247,7 +247,7 @@ if "gerando" not in st.session_state:
 
 # ── Interface ─────────────────────────────────────────────────────────────────
 
-st.image("logo.png", width=220)
+st.image("logo2.png", width=280)
 st.markdown(
     '<p class="subtitle">Gerador de roteiros para Instagram Reels, TikTok e YouTube Shorts</p>',
     unsafe_allow_html=True,
