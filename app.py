@@ -13,7 +13,7 @@ st.set_page_config(
     layout="wide",
 )
 
-# ── Custom CSS (dark mode + vermelho/laranja) ─────────────────────────────────
+# ── Custom CSS ────────────────────────────────────────────────────────────────
 
 st.markdown("""
 <style>
@@ -21,15 +21,23 @@ st.markdown("""
 
 html, body, [class*="css"] {
     font-family: 'Inter', sans-serif;
-    background-color: #0f0f0f;
-    color: #e0e0e0;
+    background-color: #FFFEDC;
+    color: #333;
+}
+
+/* Streamlit app containers */
+.stApp, .stApp > header, section.main, .block-container,
+[data-testid="stAppViewContainer"], [data-testid="stAppViewBlockContainer"],
+[data-testid="stVerticalBlock"], [data-testid="stMainBlockContainer"],
+[data-testid="stMain"], .main .block-container {
+    background-color: #FFFEDC !important;
 }
 
 /* Cabeçalho */
 .main-title {
     font-size: 2.6rem;
     font-weight: 700;
-    background: linear-gradient(90deg, #ff4e00, #ff9a00);
+    background: linear-gradient(90deg, #E1587D, #EF819E);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-bottom: 0;
@@ -45,25 +53,67 @@ html, body, [class*="css"] {
 .section-title {
     font-size: 1rem;
     font-weight: 700;
-    color: #ff6a00;
-    border-left: 3px solid #ff6a00;
+    color: #E1587D;
+    border-left: 3px solid #E1587D;
     padding-left: 0.6rem;
     margin: 1.6rem 0 0.8rem 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
-/* Caixas de entrada */
-input, textarea, select, [data-baseweb="select"] {
-    background-color: #1a1a1a !important;
-    color: #e0e0e0 !important;
-    border: 1px solid #333 !important;
+/* Inputs e textareas */
+input, textarea {
+    background-color: #EF819E !important;
+    color: #FFFFFF !important;
+    border: 1px solid #E1587D !important;
     border-radius: 8px !important;
+}
+input::placeholder, textarea::placeholder {
+    color: rgba(255,255,255,0.6) !important;
+}
+
+/* Comboboxes / selectboxes (BaseWeb) */
+[data-baseweb="select"] > div,
+[data-baseweb="select"] > div > div,
+[data-baseweb="base-input"],
+[data-baseweb="input"],
+div[class*="InputContainer"],
+div[class*="valueContainer"],
+div[class*="controlContainer"] {
+    background-color: #EF819E !important;
+    color: #FFFFFF !important;
+    border: 1px solid #E1587D !important;
+    border-radius: 8px !important;
+}
+
+/* Texto selecionado no combobox */
+[data-baseweb="select"] span,
+[data-baseweb="select"] div[aria-selected] {
+    color: #FFFFFF !important;
+}
+
+/* Ícone de seta */
+[data-baseweb="select"] svg {
+    fill: #FFFFFF !important;
+}
+
+/* Lista dropdown */
+[data-baseweb="popover"], [data-baseweb="menu"],
+ul[data-baseweb="menu"] {
+    background-color: #EF819E !important;
+    border: 1px solid #E1587D !important;
+}
+[role="option"] {
+    background-color: #EF819E !important;
+    color: #FFFFFF !important;
+}
+[role="option"]:hover, [aria-selected="true"] {
+    background-color: #E1587D !important;
 }
 
 /* Botão principal */
 div.stButton > button[kind="primary"] {
-    background: linear-gradient(90deg, #ff4e00, #ff9a00);
+    background: linear-gradient(90deg, #E1587D, #EF819E);
     color: white;
     border: none;
     border-radius: 8px;
@@ -76,21 +126,21 @@ div.stButton > button[kind="primary"]:hover { opacity: 0.85; }
 
 /* Botões secundários */
 div.stButton > button[kind="secondary"] {
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    border: 1px solid #444;
+    background-color: #EF819E;
+    color: #FFFFFF;
+    border: 1px solid #E1587D;
     border-radius: 8px;
 }
 
 /* Barra de progresso */
 .stProgress > div > div > div {
-    background: linear-gradient(90deg, #ff4e00, #ff9a00) !important;
+    background: linear-gradient(90deg, #E1587D, #EF819E) !important;
 }
 
 /* Área do roteiro */
 .roteiro-box {
-    background-color: #141414;
-    border: 1px solid #2a2a2a;
+    background-color: #EF819E;
+    border: 1px solid #E1587D;
     border-radius: 10px;
     padding: 1.4rem;
     max-height: 520px;
@@ -98,7 +148,7 @@ div.stButton > button[kind="secondary"] {
     font-size: 0.92rem;
     line-height: 1.7;
     white-space: pre-wrap;
-    color: #ddd;
+    color: #FFFFFF;
 }
 
 div[data-testid="stHorizontalBlock"] { gap: 0.6rem; }
@@ -295,7 +345,7 @@ with col_resultado:
             roteiro_js = st.session_state.roteiro.replace("`", "\\`").replace("\n", "\\n")
             copy_js = f"""
             <button onclick="navigator.clipboard.writeText(`{roteiro_js}`).then(()=>this.innerText='✓ Copiado!')"
-                style="width:100%;padding:0.45rem;background:#1e1e1e;color:#e0e0e0;border:1px solid #444;
+                style="width:100%;padding:0.45rem;background:#EF819E;color:#FFFFFF;border:1px solid #E1587D;
                        border-radius:8px;cursor:pointer;font-family:Inter,sans-serif;font-size:0.85rem;">
                 📋 Copiar
             </button>
@@ -319,11 +369,11 @@ with col_resultado:
         st.markdown("")
         st.markdown(
             """
-            <div style="margin-top:4rem;text-align:center;color:#444;">
+            <div style="margin-top:4rem;text-align:center;color:#888;">
                 <div style="font-size:3rem;">🎬</div>
                 <p style="font-size:1rem;margin-top:0.5rem;">
                     Preencha os campos ao lado e clique em<br>
-                    <strong style="color:#ff6a00;">Gerar Roteiro</strong>
+                    <strong style="color:#E1587D;">Gerar Roteiro</strong>
                 </p>
             </div>
             """,
