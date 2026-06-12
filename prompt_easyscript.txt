@@ -1,0 +1,46 @@
+PROMPT PARA DESENVOLVIMENTO DO PROJETO EASYSCRIPT
+
+Contexto do projeto:
+Quero desenvolver o EasyScript, um gerador automático de roteiros para vídeos curtos de redes sociais (Instagram Reels, TikTok e YouTube Shorts), feito em Python com Streamlit, integrado à API da OpenAI (modelo openai/gpt-oss-120b), com versionamento no GitHub.
+
+Estrutura geral do projeto:
+1. Crie um repositório local organizado com a seguinte estrutura de arquivos:
+   - app.py (arquivo principal do Streamlit)
+   - requirements.txt (com as dependências: streamlit, openai)
+   - .env.example (exemplo de variável de ambiente para a chave da API, sem expor a chave real)
+   - .gitignore (ignorando .env, __pycache__, arquivos temporários e ambientes virtuais)
+   - README.md (explicando o projeto, como instalar e como rodar)
+
+2. Funcionalidades do app.py:
+   - Interface em Streamlit com um título "EasyScript" e subtítulo explicando o propósito da ferramenta.
+   - Campos de entrada organizados em seções:
+     a) Informações essenciais: tema (obrigatório), idioma (padrão "Português brasileiro"), gênero do vídeo (botões: comédia, educativo, informativo, motivacional, storytelling, tutorial, opinião, entretenimento, drama, lifestyle), plataforma (instagram reels, tiktok, youtube shorts, todos), duração alvo (30s, 60s, 90s, 3 minutos).
+     b) Público e tom: público-alvo (jovens, adultos jovens, adultos, público geral, profissionais, estudantes, mães/pais, empreendedores) e tom da narração (descontraído, sério, inspirador, provocador, íntimo, energético, reflexivo).
+     c) Estrutura e estilo: tipo de hook (pergunta instigante, fato surpreendente, afirmação polêmica, história pessoal, desafio ao espectador, estatística impactante), call to action final (salvar, seguir, comentar, marcar amigo, compartilhar, visitar link na bio, nenhum), narrador/personagem (campo de texto), referências/exemplos (campo de texto), palavras/temas a evitar (campo de texto), observações extras (campo de texto livre).
+     d) Campo de descrição do vídeo (textarea obrigatório, com placeholder explicando que o usuário deve descrever o que quer comunicar, contexto e referências).
+
+   - Botão "Gerar Roteiro" que monta um prompt estruturado combinando todas as variáveis preenchidas e envia para a API da OpenAI usando o modelo openai/gpt-oss-120b.
+   - Exibição de uma barra de progresso de preenchimento dos campos obrigatórios (em porcentagem).
+   - Após a geração, exibir o roteiro formatado em markdown dentro de uma caixa de texto rolável, com:
+     - Botão "Copiar" (copiar o roteiro para a área de transferência)
+     - Botão "Baixar .txt" (download do roteiro em arquivo de texto)
+     - Botão "Novo roteiro" (limpar os campos e começar de novo)
+
+   - O roteiro gerado deve seguir uma estrutura de cenas com marcação de tempo (hook, desenvolvimento, fechamento), instruções visuais entre colchetes, falas do narrador, e duração total compatível com o tempo selecionado.
+
+3. Gerenciamento da chave de API:
+   - Usar a biblioteca os para ler a chave da API da OpenAI a partir de uma variável de ambiente chamada OPENAI_API_KEY.
+   - Nunca expor a chave no código, apenas referenciar via os.environ ou os.getenv.
+
+4. Integração com GitHub:
+   - Criar o repositório local com git init.
+   - Adicionar um README.md completo, com: descrição do projeto, prints de tela (se possível), instruções de instalação (criação de ambiente virtual, pip install -r requirements.txt), instruções de configuração da chave de API, instruções de execução (streamlit run app.py), e informações sobre deploy no Streamlit Cloud.
+   - Criar o .gitignore adequado para projetos Python e Streamlit.
+   - Estruturar os commits de forma incremental e organizada (ex: "estrutura inicial do projeto", "implementação da interface", "integração com a API da OpenAI", "ajustes de UX e exportação de roteiro").
+
+5. Estilo visual:
+   - Seguir uma identidade visual escura (dark mode), com detalhes em tons de vermelho/laranja, tipografia moderna e botões com destaque para as opções selecionadas, conforme o protótipo já validado.
+   - Layout responsivo e organizado em seções claramente delimitadas, com títulos numerados (ex: "① Informações essenciais", "② Público & Tom", "③ Estrutura & Estilo").
+
+Resultado esperado:
+Um aplicativo Streamlit funcional, pronto para deploy no Streamlit Cloud, com código limpo, comentado e organizado em funções, repositório no GitHub configurado corretamente, e documentação clara para que outras pessoas possam instalar e executar o projeto.
