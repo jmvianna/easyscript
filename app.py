@@ -171,7 +171,8 @@ def gerar_pdf(texto: str) -> bytes:
                            leading=16, spaceAfter=4)
     story = []
     for linha in texto.split("\n"):
-        story.append(Paragraph(linha.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") or " ", style))
+        linha_safe = linha.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;").strip()
+        story.append(Paragraph(linha_safe if linha_safe else "&nbsp;", style))
     doc.build(story)
     return buf.getvalue()
 
@@ -227,9 +228,10 @@ Seja criativo, direto e adequado à plataforma especificada.
 def gerar_roteiro(prompt: str) -> str:
     api_key = os.getenv("GROQ_API_KEY")
     if not api_key:
-        st.error("Chave de API não encontrada. Configure a variável GROQ_API_KEY no arquivo .env")
+        st.error("Chave de API não encontrada. Configure GROQ_API_KEY no arquivo .env")
         return ""
     client = Groq(api_key=api_key)
+    ultimo_erro = ""
     for model in ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]:
         try:
             response = client.chat.completions.create(
@@ -239,9 +241,10 @@ def gerar_roteiro(prompt: str) -> str:
                 max_tokens=2000,
             )
             return response.choices[0].message.content
-        except Exception:
+        except Exception as e:
+            ultimo_erro = str(e)
             continue
-    st.error("Não foi possível gerar o roteiro. Verifique sua chave Groq e tente novamente.")
+    st.error(f"Erro ao gerar roteiro: {ultimo_erro}")
     return ""
 
 
